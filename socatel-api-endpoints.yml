@@ -1,0 +1,749 @@
+swagger: '2.0'
+info:
+  title: SoCaTel - Data Mining, Analytics and Recommendation Engine RESTful API Endpoints
+  description: WP4 - KB RESTful API Endpoints that are derived from the Data Mining and Analytics insights [RDI, DAI, SDI] as these are defined in D4.5
+  version: v1.0
+  contact:
+  - name: "CyRIC | Cyprus Research and Innovation Centre"
+    email: "info@cyric.eu"
+tags:
+- name: "RDI"
+  description: "Raw Data Derived Insights"
+- name: "SDI"
+  description: "Semantic Derived Insights"
+- name: "DAI"
+  description: "Data Acquisition Insights"
+- name: "DSE"
+  description: "Data Storage Endpoints"
+basePath: /api
+schemes:
+  - http
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  "/get_group_average_sentiment_score/{date_from}/{date_to}/{group_id}":
+    get:
+      tags:
+      - "DAI"
+      operationId: get_group_average_sentiment_score
+      summary: Returns Services by providing an offset [from, to]
+      description:   
+      parameters:
+      - name: "date_from"
+        in: "path"
+        description: "The date from which results should be retrieved. Format should be in YYYY-MM-DD, e.g. 2020-03-20"
+        required: false
+        type: "string"
+        format: date  
+      - name: "date_to"
+        in: "path"
+        description: "The date until which results should be retrieved. Format should be in YYYY-MM-DD, e.g. 2020-03-20"
+        required: false
+        type: "string"
+        format: date
+      - name: "group_id"
+        in: "path"
+        description: "The group id to provide demographics for"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/graphql_twSearchByTopics":
+      post:
+        tags:
+        - "SDI"
+        operationId: graphql_twSearchByTopics
+        summary: Search of twitter posts by topics 
+        description:   
+        parameters:
+        - in: "body"
+          name: "Topics"
+          description: "Array of topics"
+          schema:
+            $ref: "#/definitions/topics_definition_1"
+          required: true                    
+        responses:
+          200:
+            description: "Successful Retrieval"
+          401:
+            description: "Unauthorized"
+          500:
+            description: "Internal Server Error. Contact your Administrator"
+  "/graphql_multiplePostsByTopics":
+      post:
+        tags:
+        - "SDI"
+        operationId: graphql_multiplePostsByTopics
+        summary: Search for multiple posts by topics
+        description:   
+        parameters:
+        - in: "body"
+          name: "Topics"
+          description: "Array of topics"
+          schema:
+            $ref: "#/definitions/topics_definition_2"
+          required: true        
+        responses:
+          200:
+            description: "Successful Retrieval"
+          401:
+            description: "Unauthorized"
+          500:
+            description: "Internal Server Error. Contact your Administrator"
+  "/graphql_servicesByTopics/{from}/{to}":
+      post:
+        tags:
+        - "SDI"
+        operationId: graphql_servicesByTopics
+        summary: Search for multiple services by topics
+        description:   
+        parameters:
+        - in: "body"
+          name: "Topics"
+          description: "Array of topics"
+          schema:
+            $ref: "#/definitions/topics_definition_2"
+          required: true
+        - name: "from"
+          in: "path"
+          description: "from"
+          required: true
+          type: "integer"
+        - name: "to"
+          in: "path"
+          description: "to"
+          required: true
+          type: "integer"  
+        responses:
+          200:
+            description: "Successful Retrieval"
+          401:
+            description: "Unauthorized"
+          500:
+            description: "Internal Server Error. Contact your Administrator" 
+  "/graphql_introspect_post_type":
+    get:
+      tags:
+      - "SDI"
+      operationId: graphql_introspect_post_type
+      summary: Returns an introspect of a post type as this is defined in the GraphDB
+      description:
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/graphql_postsById/{id}":
+    get:
+      tags:
+      - "SDI"
+      operationId: graphql_postsById
+      summary: Returns posts by providing an id
+      description:   
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Post Id"
+        required: true
+        type: "string"      
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"   
+  "/graphql_search_for_posts/{limit}":
+    get:
+      tags:
+      - "SDI"
+      operationId: graphql_search_for_posts
+      summary: Returns posts by providing an id
+      description:   
+      parameters:
+      - name: "limit"
+        in: "path"
+        description: "Limit"
+        required: true
+        type: "integer"      
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"  
+  "/graphql_service/{id}":
+    get:
+      tags:
+      - "SDI"
+      operationId: graphql_graphql_service
+      summary: Returns a specific Service by providing an id
+      description:   
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id"
+        required: true
+        type: "integer"      
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"                               
+  "/graphql_service_offset/{from}/{to}":
+    get:
+      tags:
+      - "SDI"
+      operationId: graphql_service_offset
+      summary: Returns Services by providing an offset [from, to]
+      description:   
+      parameters:
+      - name: "from"
+        in: "path"
+        description: "from"
+        required: true
+        type: "integer"  
+      - name: "to"
+        in: "path"
+        description: "to"
+        required: true
+        type: "integer"              
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostViewedAndJoinedGroups/{timestamp_from}/{timestamp_to}/{size}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostViewedAndJoinedGroups
+      summary: Get most viewed and joined SoCaTel co-creation groups 
+      description:   
+      parameters:
+      - name: "timestamp_from"
+        in: "path"
+        description: "Unix timestamp from which to retrieve historical entries"
+        type: "integer"
+        required: false
+      - name: "timestamp_to"
+        in: "path"
+        description: "Unix timestamp until which to retrieve historical entries"
+        required: false
+        type: "integer"
+      - name: "size"
+        in: "path"
+        description: "The number of groups for which to return results"
+        required: false
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostPostedInGroups/{timestamp_from}/{timestamp_to}/{size}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostPostedInGroups
+      summary: Get total posts in group, given a timeframe from Unix timestamps 
+      description:   
+      parameters:
+      - name: "timestamp_from"
+        in: "path"
+        description: "Unix timestamp from which to retrieve historical entries"
+        type: "integer"
+        required: false
+      - name: "timestamp_to"
+        in: "path"
+        description: "Unix timestamp until which to retrieve historical entries"
+        required: false
+        type: "integer"
+      - name: "size"
+        in: "path"
+        description: "The number of groups for which to return results"
+        required: false
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostTrendingGroups/{timestamp_from}/{timestamp_to}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostTrendingGroups
+      summary: Get most trending group, based on (dis)likes and active (have posted at least once) unique users in a given time period
+      description:
+      parameters:
+      - name: "timestamp_from"
+        in: "path"
+        description: "Unix timestamp from which to retrieve historical entries"
+        required: false
+        type: "integer"
+      - name: "timestamp_to"
+        in: "path"
+        description: "Unix timestamp until which to retrieve historical entries"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getUserDemographicsGivenGroup/{group_id}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getUserDemographicsGivenGroup
+      summary: Get user demographics for all user characteristics currently available.
+      description:
+      parameters:
+      - name: "group_id"
+        in: "path"
+        description: "The group id to provide demographics for"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getGroupThemesPopularity/{size}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostPopularCategoriesAcrossGroups
+      summary: Get most visited categories across co-creation groups
+      description:
+      parameters:
+      - name: "size"
+        in: "path"
+        description: "The number of top groups to return."
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostPopularGroupsByPopRatioLocalityFiltered/{timestamp_from}/{timestamp_to}/{locality_id}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostPopularGroupsByPopRatioLocalityFiltered
+      summary: Get most popular groups based on views-joins ratio across co-creation groups filtered by locality
+      description:
+      parameters:
+      - name: "timestamp_from"
+        in: "path"
+        description: "Unix timestamp from which to retrieve historical entries"
+        type: "integer"
+        required: false
+      - name: "timestamp_to"
+        in: "path"
+        description: "Unix timestamp until which to retrieve historical entries"
+        required: false
+        type: "integer"
+      - name: "locality_id"
+        in: "path"
+        description: "The locality id to filter for."
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostPopularGroupsByPopRatioLanguageFiltered/{timestamp_from}/{timestamp_to}/{language_id}":
+      get:
+        tags:
+        - "RDI"
+        operationId: elasticsearch_getMostPopularGroupsByPopRatioLocalityFiltered
+        summary: Get most popular groups based on views-joins ratio across co-creation groups filtered by locality
+        description:
+        parameters:
+        - name: "timestamp_from"
+          in: "path"
+          description: "Unix timestamp from which to retrieve historical entries"
+          type: "integer"
+          required: false
+        - name: "timestamp_to"
+          in: "path"
+          description: "Unix timestamp until which to retrieve historical entries"
+          required: false
+          type: "integer"
+        - name: "language_id"
+          in: "path"
+          description: "The language id to filter for."
+          required: true
+          type: "integer"
+        responses:
+          200:
+            description: "Successful Retrieval"
+          401:
+            description: "Unauthorized"
+          500:
+            description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostPopularGroupsByPopRatioThemesFiltered/{timestamp_from}/{timestamp_to}/{locality_id}":
+      post:
+        tags:
+        - "RDI"
+        operationId: elasticsearch_getMostPopularGroupsByPopRatioLocalityFiltered
+        summary: Get most popular groups based on views-joins ratio across co-creation groups filtered by locality
+        description:
+        parameters:
+        - name: "timestamp_from"
+          in: "path"
+          description: "Unix timestamp from which to retrieve historical entries"
+          type: "integer"
+          required: false
+        - name: "timestamp_to"
+          in: "path"
+          description: "Unix timestamp until which to retrieve historical entries"
+          required: false
+          type: "integer"
+        - name: "Topics"
+          in: "body"
+          description: "Array of topics"
+          schema:
+            $ref: "#/definitions/themes_definition"
+          required: true
+        - name: "locality_id"
+          in: "path"
+          description: "The locality id to filter for."
+          required: false
+          type: "integer"
+        responses:
+          200:
+            description: "Successful Retrieval"
+          401:
+            description: "Unauthorized"
+          500:
+            description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostGroupsByPopRatioSkillsFiltered/{locality_id}":
+    post:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostPopularCategoriesAcrossGroupsSkillsFiltered
+      summary: Get most popular groups based on given user skillset
+      description:
+      parameters:
+      - name: "Skills"
+        in: "body"
+        description: "Array of skills"
+        schema:
+          $ref: "#/definitions/skills_definition"
+        required: true
+      - name: "locality_id"
+        in: "path"
+        description: "The locality id to filter for."
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostActiveUsersInGroup/{group_id}/{size}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostActiveUsersInGroup
+      summary: Get the most active users in a group
+      description:
+      parameters:
+      - name: "group_id"
+        in: "path"
+        description: "Group Id"
+        type: "integer"
+        required: true
+      - name: "size"
+        in: "path"
+        description: "How many words should be returned"
+        type: "integer"
+        required: false
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getMostPopularWordsGivenGroup/{timestamp_from}/{timestamp_to}/{group_id}/{size}":
+    get:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getMostPopularWordsGivenGroup
+      summary: Get most frequent words given a group
+      description:
+      parameters:
+      - name: "timestamp_from"
+        in: "path"
+        description: "Unix timestamp from which to retrieve historical entries"
+        type: "integer"
+        required: false
+      - name: "timestamp_to"
+        in: "path"
+        description: "Unix timestamp until which to retrieve historical entries"
+        required: false
+        type: "integer"
+      - name: "group_id"
+        in: "path"
+        description: "SoCaTel group id"
+        type: "integer"
+        required: true
+      - name: "size"
+        in: "path"
+        description: "How many words should be returned"
+        type: "integer"
+        required: false
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getGroupsByKeywords/{size}":
+    post:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getGroupsByKeywords
+      summary: Get groups given a set of keywords
+      description:
+      parameters:
+      - in: "body"
+        name: "Keywords"
+        description: "Array of keywords"
+        schema:
+          $ref: "#/definitions/keywords_definition"
+        required: true
+      - name: "size"
+        in: "path"
+        description: "The number of groups for which to return results"
+        required: false 
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/elasticsearch_getServicesByKeywords/{size}":
+    post:
+      tags:
+      - "RDI"
+      operationId: elasticsearch_getServicesByKeywords
+      summary: Get services given a set of keywords
+      description:
+      parameters:
+      - in: "body"
+        name: "Keywords"
+        description: "Array of keywords"
+        schema:
+          $ref: "#/definitions/keywords_no_locality_definition"
+        required: true
+      - name: "size"
+        in: "path"
+        description: "The number of services for which to return results"
+        required: false 
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/insert_new_socatel_user":
+    post:
+      tags:
+      - "DSE"
+      operationId: insert_new_socatel_user
+      summary: Insert new Socatel user
+      description:
+      parameters:
+      - in: "body"
+        name: "json_body"
+        type: "object"
+        description: "Socatel user details in JSON format with appropriate schema"
+        required: true
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/insert_new_socatel_organisation":
+    post:
+      tags:
+      - "DSE"
+      operationId: insert_new_socatel_organisation
+      summary: Insert new Socatel organisation
+      description:
+      parameters:
+      - in: "body"
+        name: "json_body"
+        type: "object"
+        description: "Socatel organisation details in JSON format with appropriate schema"
+        required: true
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/insert_new_socatel_group":
+    post:
+      tags:
+      - "DSE"
+      operationId: insert_new_socatel_group
+      summary: Insert new Socatel group
+      description:
+      parameters:
+      - in: "body"
+        name: "json_body"
+        type: "object"
+        description: "Socatel group details in JSON format with appropriate schema"
+        required: true
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+  "/insert_new_socatel_service":
+    post:
+      tags:
+      - "DSE"
+      operationId: insert_new_socatel_service
+      summary: Insert new Socatel user
+      description:
+      parameters:
+      - in: "body"
+        name: "json_body"
+        type: "object"
+        description: "Socatel user details in JSON format with appropriate schema"
+        required: true
+      responses:
+        200:
+          description: "Successful Retrieval"
+        401:
+          description: "Unauthorized"
+        500:
+          description: "Internal Server Error. Contact your Administrator"
+definitions:
+  topics_definition_1:
+    type: "object"
+    properties:
+      topics:
+        type: "array"
+        items:
+          type: "string"   
+          example: "blog"  
+      language:          
+        type: string
+        enum: [fr, en, es, ca, hu, ga, fi]  
+        example: "es"
+  topics_definition_2:
+    type: "object"
+    properties:
+      topics:
+        type: "array"
+        items:
+          type: "string"   
+          example: "health"  
+      language:          
+          type: string
+          enum: [fr, en, es, ca, hu, ga, fi]  
+          example: "es"
+  free_text_definition:
+    type: "object"   
+    properties:
+      free_text:
+        type: "string"
+        example: "I participate in Socatel groups concerning social activities"
+      language:          
+          type: string
+          enum: [fr, en, es, ca, hu, ga, fi]  
+          example: "en"
+  keywords_definition:
+    type: "object"
+    properties:
+      keywords:
+        type: "array"
+        items:
+          type: "string"   
+          example: "food"  
+      language:          
+        type: string
+        enum: [fr, en, es, ca, hu, ga, fi]  
+        example: "en"
+      locality_id:
+        type: integer
+        enum: [1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007]
+        example: 1000
+  keywords_no_locality_definition:
+    type: "object"
+    properties:
+      keywords:
+        type: "array"
+        items:
+          type: "string"   
+          example: "food"  
+      language:          
+        type: string
+        enum: [fr, en, es, ca, hu, ga, fi]  
+        example: "en"
+  themes_definition:
+    type: "object"
+    properties:
+      themes:
+        type: "array"
+        items:
+          type: "string"
+          example: "Social"
+  skills_definition:
+    type: "object"
+    properties:
+      skills:
+        type: "array"
+        items:
+          type: "string"   
+          example: "Healthcare"
+securityDefinitions:
+  basicAuth:
+    type: basic
+
+security:
+- basicAuth: []
