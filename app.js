@@ -57,35 +57,45 @@ var basic_auth = basicAuth({
 app.use(bodyParser.json({ type: 'application/json' }))
 
 app.post('/api/graphql_twSearchByTopics', basic_auth, (req, res) => {
-    if (req.body === "undefined" || req.body.topics === "undefined" || !Array.isArray(req.body.topics)){
-        throw "There is not an array of topics that is sent with the request. Abort!"
+	try {
+		if (req.body === "undefined" || req.body.topics === "undefined" || !Array.isArray(req.body.topics)){
+			throw "There is not an array of topics that is sent with the request. Abort!"
+		}
+		var query = _Config.query_body_transformation(_Config.graphql_twSearchByTopics, req.body.topics, true, "$topics");
+
+		//Include language
+		if (req.body.language !== "undefined" && req.body.language !== '' && req.body.language !== null){
+			query = _Config.query_body_transformation(query, req.body.language, false, "$language");
+		}    
+
+		return client.request(query).then(data => 
+			res.send(data)
+		);
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-    var query = _Config.query_body_transformation(_Config.graphql_twSearchByTopics, req.body.topics, true, "$topics");
-
-    //Include language
-    if (req.body.language !== "undefined" && req.body.language !== '' && req.body.language !== null){
-        query = _Config.query_body_transformation(query, req.body.language, false, "$language");
-    }    
-
-    return client.request(query).then(data => 
-        res.send(data)
-    );
 });
 
 app.post('/api/graphql_multiplePostsByTopics', basic_auth, (req, res) => {
-    if (req.body === undefined || req.body.topics === undefined || !Array.isArray(req.body.topics)){
-        throw "There is not an array of topics that is sent with the request. Abort!"
+	try {
+		if (req.body === undefined || req.body.topics === undefined || !Array.isArray(req.body.topics)){
+			throw "There is not an array of topics that is sent with the request. Abort!"
+		}
+		var query =_Config.query_body_transformation(_Config.graphql_multiplePostsByTopics, req.body.topics, true, "$topics");   
+
+		//Include language
+		if (req.body.language !== undefined && req.body.language !== '' && req.body.language !== null){
+			query = _Config.query_body_transformation(query, req.body.language, false, "$language");
+		}    
+
+		return client.request(query).then(data => 
+			res.send(data)
+		);
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-    var query =_Config.query_body_transformation(_Config.graphql_multiplePostsByTopics, req.body.topics, true, "$topics");   
-
-    //Include language
-    if (req.body.language !== undefined && req.body.language !== '' && req.body.language !== null){
-        query = _Config.query_body_transformation(query, req.body.language, false, "$language");
-    }    
-
-    return client.request(query).then(data => 
-        res.send(data)
-    );
 });
 
 
@@ -114,54 +124,79 @@ app.post('/api/graphql_servicesByTopics/:from/:to', basic_auth, (req, res) => {
 })
 
 app.get('/api/graphql_introspect_post_type', basic_auth, (req, res) => {
-    var query = _Config.graphql_introspect_post_type;
-    return client.request(query).then(data => 
-        res.send(data)
-    );    
+	try {
+		var query = _Config.graphql_introspect_post_type;
+		return client.request(query).then(data => 
+			res.send(data)
+		);    
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
+    }
 });
 
 
 app.get('/api/graphql_postsById/:id', basic_auth, (req, res) => {
-    if (req.params === undefined || req.params.id === undefined){
-        throw "There is no :id URL param sent with the request. Abort!"
+	try {
+		if (req.params === undefined || req.params.id === undefined){
+			throw "There is no :id URL param sent with the request. Abort!"
+		}
+		var query = _Config.query_body_transformation(_Config.graphql_postsById, req.params.id, false, "$identifier");
+		return client.request(query).then(data => 
+			res.send(data)
+		);
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-    var query = _Config.query_body_transformation(_Config.graphql_postsById, req.params.id, false, "$identifier");
-    return client.request(query).then(data => 
-        res.send(data)
-    );    
 });
 
 app.get('/api/graphql_search_for_posts/:limit', basic_auth, (req, res) => {
-    if (req.params === undefined || req.params.limit === undefined){
-        throw "There is no :id URL param sent with the request. Abort!"
+	try {
+		if (req.params === undefined || req.params.limit === undefined){
+			throw "There is no :id URL param sent with the request. Abort!"
+		}
+		var query =_Config.query_body_transformation(_Config.graphql_search_for_posts, req.params.limit, false, "$limit")
+		return client.request(query).then(data => 
+			res.send(data)
+		);
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-    var query =_Config.query_body_transformation(_Config.graphql_search_for_posts, req.params.limit, false, "$limit")
-    return client.request(query).then(data => 
-        res.send(data)
-    );    
 });
 
 
 app.get('/api/graphql_service/:id', basic_auth, (req, res) => {
-    if (req.params === undefined || req.params.id === undefined){
-        throw "There is no :id URL param sent with the request. Abort!"
+	try {
+		if (req.params === undefined || req.params.id === undefined){
+			throw "There is no :id URL param sent with the request. Abort!"
+		}
+		var query =_Config.query_body_transformation(_Config.graphql_service_by_id, req.params.id, false, "$id")
+		return client.request(query).then(data => 
+			res.send(data)
+		);    
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-    var query =_Config.query_body_transformation(_Config.graphql_service_by_id, req.params.id, false, "$id")
-    return client.request(query).then(data => 
-        res.send(data)
-    );    
 });
 
 
 app.get('/api/graphql_service_offset/:from/:to', basic_auth, (req, res) => {
-    if (req.params === undefined || req.params.from === undefined || req.params.to === undefined){
-        throw "There is either no :from or :to in URL param sent with the request. Abort!"
+	try {
+		if (req.params === undefined || req.params.from === undefined || req.params.to === undefined){
+			throw "There is either no :from or :to in URL param sent with the request. Abort!"
+		}
+		var query_from =_Config.query_body_transformation(_Config.graphql_service_by_offset, req.params.from, false, "$from")
+		var query =_Config.query_body_transformation(query_from, req.params.to, false, "$to")
+		return client.request(query).then(data => 
+			res.send(data)
+		);    
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-    var query_from =_Config.query_body_transformation(_Config.graphql_service_by_offset, req.params.from, false, "$from")
-    var query =_Config.query_body_transformation(query_from, req.params.to, false, "$to")
-    return client.request(query).then(data => 
-        res.send(data)
-    );    
 });
 
 // // ---- RDI
@@ -1066,47 +1101,52 @@ app.post('/api/elasticsearch_getServicesByKeywords/:size', basic_auth, (req, res
 // // ---- DAI
 
 app.get('/api/get_group_average_sentiment_score/:date_from/:date_to/:group_id', basic_auth, (req, res) => {
-    if (req.body.date_from === "undefined" || req.body.date_from === '' && req.body.date_from === null || req.body.date_from === undefined){
-        date_from = new Date('1970-01-01', )
-        date_from.setHours(0,0,0,0); // set at the start of the day to include all of it.
-    } else {
-        date_from = new Date(req.params.date_from)
+	try {
+		if (req.body.date_from === "undefined" || req.body.date_from === '' && req.body.date_from === null || req.body.date_from === undefined){
+			date_from = new Date('1970-01-01', )
+			date_from.setHours(0,0,0,0); // set at the start of the day to include all of it.
+		} else {
+			date_from = new Date(req.params.date_from)
+		}
+
+		if (req.body.date_to === "undefined" || req.body.date_to === '' && req.body.date_to === null || req.body.date_to === undefined){
+			date_to = new Date()
+			date_to.setHours(23,59,59,0); // set at the last minute of the day to include all of it
+		} else {
+			date_to = new Date(req.params.date_to)
+		}
+
+		MongoClient.connect(mongo_url, { useNewUrlParser: true }, (err, client) => {
+			if (err) return res.status(500).send([])
+
+			const gtg_db = client.db(_Config.MongoDB_GeneralSentiment_db);
+			var sim_selector = {
+				"group_id": req.params.group_id,
+				"date_from": {'$gte': date_from}, 
+				"date_to": {'$lte': date_to}
+			}
+
+			out = {}
+			gtg_db.collection(_Config.MongoDB_GeneralSentiment_lr_collection).find(sim_selector).toArray(function(err, result) {
+				if (result.length > 0) {
+					var total = result.reduce((x,y) => x + y.no_of_posts, 0)
+					var average_score = result.reduce((x,y) => x + y.no_of_posts * (y.avg_sentiment_score / total), 0)
+					
+					return res.status(200).send({
+						'group_id': parseInt(req.params.group_id),
+						'average_sentiment_score': average_score,
+						'total_posts': total
+					})
+				}
+				
+				return res.status(200).send(result)
+			})
+
+		})
+	} catch (err) {
+        console.log(err.message)
+        return res.status(500).send([])
     }
-
-    if (req.body.date_to === "undefined" || req.body.date_to === '' && req.body.date_to === null || req.body.date_to === undefined){
-        date_to = new Date()
-        date_to.setHours(23,59,59,0); // set at the last minute of the day to include all of it
-    } else {
-        date_to = new Date(req.params.date_to)
-    }
-
-    MongoClient.connect(mongo_url, { useNewUrlParser: true }, (err, client) => {
-        if (err) return res.status(500).send([])
-
-        const gtg_db = client.db(_Config.MongoDB_GeneralSentiment_db);
-        var sim_selector = {
-            "group_id": req.params.group_id,
-            "date_from": {'$gte': date_from}, 
-            "date_to": {'$lte': date_to}
-        }
-
-        out = {}
-        gtg_db.collection(_Config.MongoDB_GeneralSentiment_lr_collection).find(sim_selector).toArray(function(err, result) {
-            if (result.length > 0) {
-                var total = result.reduce((x,y) => x + y.no_of_posts, 0)
-                var average_score = result.reduce((x,y) => x + y.no_of_posts * (y.avg_sentiment_score / total), 0)
-                
-                return res.status(200).send({
-                    'group_id': parseInt(req.params.group_id),
-                    'average_sentiment_score': average_score,
-                    'total_posts': total
-                })
-            }
-            
-            return res.status(200).send(result)
-        })
-
-    })
 });
 
 // app.get('/api/get_sentiment_given_free_text/:free_text/:language_code', basic_auth, (req, res) => {
